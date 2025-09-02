@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import "../header.css";
 import "./HomePage.css";
 
 function HomePage() {
+  useEffect(() => {
+    document.title = "HomePage";
+  }, []);
   return (
     <>
       <div className="header">

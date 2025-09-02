@@ -1,4 +1,8 @@
+import { useEffect } from "react";
 function TrackingPage() {
+  useEffect(() => {
+    document.title = "TrackingPage";
+  }, []);
   return (
     <>
       <div class="header">
