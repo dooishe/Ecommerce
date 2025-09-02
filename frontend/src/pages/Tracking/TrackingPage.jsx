@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./TrackingPage.css";
 function TrackingPage() {
   useEffect(() => {
     document.title = "TrackingPage";
@@ -7,10 +9,10 @@ function TrackingPage() {
     <>
       <div class="header">
         <div class="left-section">
-          <a href="index.html" class="header-link">
+          <Link to="/" class="header-link">
             <img class="logo" src="images/logo-white.png" />
             <img class="mobile-logo" src="images/mobile-logo-white.png" />
-          </a>
+          </Link>
         </div>
 
         <div class="middle-section">
@@ -22,23 +24,23 @@ function TrackingPage() {
         </div>
 
         <div class="right-section">
-          <a class="orders-link header-link" href="orders.html">
+          <Link class="orders-link header-link" to="/orders">
             <span class="orders-text">Orders</span>
-          </a>
+          </Link>
 
-          <a class="cart-link header-link" href="checkout.html">
+          <Link class="cart-link header-link" to="/checkout">
             <img class="cart-icon" src="images/icons/cart-icon.png" />
             <div class="cart-quantity">3</div>
             <div class="cart-text">Cart</div>
-          </a>
+          </Link>
         </div>
       </div>
 
       <div class="tracking-page">
         <div class="order-tracking">
-          <a class="back-to-orders-link link-primary" href="orders.html">
+          <Link class="back-to-orders-link link-primary" to="/orders">
             View all orders
-          </a>
+          </Link>
 
           <div class="delivery-date">Arriving on Monday, June 13</div>
 
