@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useFavicon, useTitle } from "../../hooks/usePageMeta";
 import CheckoutHeader from "./CheckoutHeader";
 import "./CheckoutPage.css";
 
 function CheckoutPage() {
-  useEffect(() => {
-    document.title = "CheckoutPage";
-  }, []);
+  useTitle("Checkout");
+  useFavicon("/favicons/cart-favicon.png");
   return (
     <>
       <CheckoutHeader />
@@ -50,7 +49,7 @@ function CheckoutPage() {
                   <div className="delivery-option">
                     <input
                       type="radio"
-                      checked
+                      defaultChecked
                       className="delivery-option-input"
                       name="delivery-option-1"
                     />
@@ -132,6 +131,7 @@ function CheckoutPage() {
                   <div className="delivery-option">
                     <input
                       type="radio"
+                      defaultChecked
                       className="delivery-option-input"
                       name="delivery-option-2"
                     />
@@ -145,7 +145,6 @@ function CheckoutPage() {
                   <div className="delivery-option">
                     <input
                       type="radio"
-                      checked
                       className="delivery-option-input"
                       name="delivery-option-2"
                     />
