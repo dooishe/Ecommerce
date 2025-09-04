@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useFavicon, useTitle } from "../../hooks/usePageMeta";
 import Header from "../../components/Header/Header";
 import ProductCard from "./components/ProductCard/ProductCard.jsx";
 import "./HomePage.css";
-import { useEffect } from "react";
-import { useState } from "react";
 
 function HomePage() {
   const [productsList, setProductsList] = useState(null);
@@ -12,8 +12,7 @@ function HomePage() {
   useEffect(() => {
     try {
       async function fetchProductList() {
-        const response = await fetch("http://localhost:3000/api/products");
-        const data = await response.json();
+        const { data } = await axios.get("http://localhost:3000/api/products");
         setProductsList(data);
       }
       fetchProductList();
