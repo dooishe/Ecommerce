@@ -1,10 +1,19 @@
 import { NavLink } from "react-router-dom";
 import "./Header.css";
-import searchIcon from "../../assets/icons/search-icon.png";
-import cartIcon from "../../assets/icons/cart-icon.png";
-import logoWhite from "../../assets/logos/logo-white.png";
-import mobileLogoWhite from "../../assets/logos/mobile-logo-white.png";
-function Header() {
+import searchIcon from "@/assets/icons/search-icon.png";
+import cartIcon from "@/assets/icons/cart-icon.png";
+import logoWhite from "@/assets/logos/logo-white.png";
+import mobileLogoWhite from "@/assets/logos/mobile-logo-white.png";
+function Header({ cartProducts }) {
+  function calculateCartQuantity() {
+    if (cartProducts === null) return 0;
+    let totalQuantity = 0;
+    cartProducts.forEach((cartProduct) => {
+      totalQuantity += cartProduct.quantity;
+    });
+
+    return totalQuantity;
+  }
   return (
     <>
       <div className="header">
@@ -35,7 +44,7 @@ function Header() {
 
           <NavLink className="cart-link header-link" to="/checkout">
             <img className="cart-icon" src={cartIcon} />
-            <div className="cart-quantity">3</div>
+            <div className="cart-quantity">{calculateCartQuantity()}</div>
             <div className="cart-text">Cart</div>
           </NavLink>
         </div>

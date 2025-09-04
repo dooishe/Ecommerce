@@ -1,5 +1,5 @@
-import { useTitle } from "../../hooks/usePageMeta";
-import Header from "../../components/Header/Header";
+import { useTitle } from "@/hooks/usePageMeta";
+import Header from "@/components/Header/Header";
 import styles from "./NotFoundPage.module.css";
 function NotFoundPage() {
   useTitle("404 Page Not Found");

@@ -1,5 +1,5 @@
 import checkmark from "@/assets/icons/checkmark.png";
-function ProductCard({ product }) {
+function HomeProductCard({ product }) {
   return (
     <>
       <div key={product.id} className="product-container">
@@ -55,4 +55,4 @@ function ProductCard({ product }) {
   );
 }
 
-export default ProductCard;
+export default HomeProductCard;
