@@ -6,7 +6,7 @@ import ProductCard from "./components/ProductCard/ProductCard.jsx";
 import "./HomePage.css";
 
 function HomePage() {
-  const [productsList, setProductsList] = useState(null);
+  const [products, setProductsList] = useState(null);
   useTitle("Home");
   useFavicon("/favicons/home-favicon.png");
   useEffect(() => {
@@ -25,7 +25,7 @@ function HomePage() {
       <Header />
       <div className="home-page">
         <div className="products-grid">
-          {productsList?.map((product) => {
+          {products?.map((product) => {
             return <ProductCard key={product.id} product={product} />;
           })}
         </div>
