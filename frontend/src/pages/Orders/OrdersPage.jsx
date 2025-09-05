@@ -1,28 +1,13 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import Header from "@/components/Header/Header";
 import "./OrdersPage.css";
 import buyAgain from "@/assets/icons/buy-again.png";
 
-function OrdersPage() {
-  const [cartProducts, setCartProducts] = useState(null);
+function OrdersPage({ cartProducts }) {
   useTitle("Orders");
   useFavicon("/favicons/orders-favicon.png");
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:3000/api/cart-items"
-        );
-        setCartProducts(data);
-      } catch (error) {
-        console.log("something went wrong: ", error);
-      }
-    }
-    fetchProducts();
-  }, []);
+
   return (
     <>
       <Header cartProducts={cartProducts} />

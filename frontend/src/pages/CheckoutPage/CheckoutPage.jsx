@@ -1,31 +1,14 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader.jsx";
 import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard.jsx";
 import "./CheckoutPage.css";
 
-function CheckoutPage() {
-  const [cartProducts, setCartProducts] = useState(null);
+function CheckoutPage({ cartProducts }) {
   useTitle("Checkout");
   useFavicon("/favicons/cart-favicon.png");
-  useEffect(() => {
-    try {
-      async function fetchCartProducts() {
-        const { data } = await axios.get(
-          "http://localhost:3000/api/cart-items"
-        );
-        setCartProducts(data);
-      }
-      fetchCartProducts();
-    } catch (er) {
-      console.log("something went wrong");
-      console.log(er);
-    }
-  }, []);
   return (
     <>
-      <CheckoutHeader />
+      <CheckoutHeader cartProducts={cartProducts} />
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
 

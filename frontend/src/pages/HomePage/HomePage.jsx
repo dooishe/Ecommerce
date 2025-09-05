@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import _ from "lodash";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import Header from "@/components/Header/Header";
 import HomeProductCard from "./components/homeProductCard/homeProductCard";
 import "./HomePage.css";
 
-function HomePage() {
+function HomePage({ cartProducts }) {
   const [products, setProducts] = useState(null);
-  const [cartProducts, setCartProducts] = useState(null);
   useTitle("Home");
   useFavicon("/favicons/home-favicon.png");
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const [res1, res2] = await Promise.all([
-          axios.get("/api/products"),
-          axios.get("/api/cart-items"),
-        ]);
-        setProducts(res1.data);
-        setCartProducts(res2.data);
+        const { data } = await axios.get("/api/products");
+        setProducts((prev) => {
+          return _.isEqual(prev, data) ? prev : data;
+        });
       } catch (error) {
         console.log("something went wrong: ", error);
       }
