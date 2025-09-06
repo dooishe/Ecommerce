@@ -11,9 +11,7 @@ function AppRoutes() {
   useEffect(() => {
     try {
       async function fetchCartProducts() {
-        const { data } = await axios.get(
-          "http://localhost:3000/api/cart-items"
-        );
+        const { data } = await axios.get("/api/cart-items?expand=product");
         setCartProducts(data);
       }
       fetchCartProducts();

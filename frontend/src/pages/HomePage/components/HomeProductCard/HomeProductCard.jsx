@@ -1,3 +1,4 @@
+import { convertCentsToDollars } from "@/utils/money";
 import checkmark from "@/assets/icons/checkmark.png";
 function HomeProductCard({ product }) {
   return (
@@ -22,7 +23,7 @@ function HomeProductCard({ product }) {
         </div>
 
         <div className="product-price">
-          ${(product.priceCents / 100).toFixed(2)}
+          ${convertCentsToDollars(product.priceCents)}
         </div>
 
         <div className="product-quantity-container">

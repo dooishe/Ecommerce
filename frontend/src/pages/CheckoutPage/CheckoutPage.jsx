@@ -1,17 +1,34 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import _ from "lodash";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader.jsx";
 import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard.jsx";
 import "./CheckoutPage.css";
 
 function CheckoutPage({ cartProducts }) {
+  const [deliveryOptions, setDeliveryOptions] = useState(null);
   useTitle("Checkout");
   useFavicon("/favicons/cart-favicon.png");
+  useEffect(() => {
+    try {
+      async function fetchDeliveryOptions() {
+        const { data } = await axios.get("/api/delivery-options");
+        setDeliveryOptions((prev) => {
+          return _.isEqual(prev, data) ? prev : data;
+        });
+      }
+      fetchDeliveryOptions();
+    } catch (er) {
+      console.log("something went wrong");
+      console.log(er);
+    }
+  }, []);
   return (
     <>
       <CheckoutHeader cartProducts={cartProducts} />
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
-
         <div className="checkout-grid">
           <div className="order-summary">
             {cartProducts?.map((cartProduct) => {
@@ -19,6 +36,7 @@ function CheckoutPage({ cartProducts }) {
                 <CheckoutProductCard
                   key={cartProduct.productId}
                   cartProduct={cartProduct}
+                  deliveryOptions={deliveryOptions}
                 />
               );
             })}
