@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
+import { convertCentsToDollars } from "@/utils/money.js";
 function DeliveryOptions({
   deliveryOption,
   cartProduct,
-  selectedOption,
-  setSelectedOption,
+  selectedOptionDays,
+  setSelectedOptionDays,
 }) {
   function calculateDeliveryDate() {
     const time = dayjs();
@@ -11,30 +12,25 @@ function DeliveryOptions({
     return deliveryDate.format("dddd, MMMM D");
   }
   function calculatedeliveryMessage() {
-    const deliveryDays = deliveryOption.deliveryDays;
-    let deliveryMessage = "";
-    if (deliveryDays === 1) {
-      deliveryMessage = "$9.99 - Shipping";
-    } else if (deliveryDays === 3) {
-      deliveryMessage = "$4.99 - Shipping";
-    } else if (deliveryDays === 7) {
-      deliveryMessage = "FREE Shipping";
+    let deliveryMessage = "FREE Shipping";
+    if (deliveryOption.priceCents > 0) {
+      deliveryMessage = `$${convertCentsToDollars(
+        deliveryOption.priceCents
+      )} - Shipping`;
     }
     return deliveryMessage;
-  }
-  function handleClick(e) {
-    setSelectedOption(Number(e.target.value));
   }
   return (
     <>
       <div className="delivery-option">
         <input
           type="radio"
-          value={deliveryOption.deliveryDays}
-          checked={deliveryOption.deliveryDays === selectedOption}
+          checked={deliveryOption.deliveryDays === selectedOptionDays}
           className="delivery-option-input"
           name={`delivery-option-${cartProduct.productId}`}
-          onChange={handleClick}
+          onChange={() => {
+            setSelectedOptionDays(deliveryOption.deliveryDays);
+          }}
         />
         <div>
           <div className="delivery-option-date">{calculateDeliveryDate()}</div>

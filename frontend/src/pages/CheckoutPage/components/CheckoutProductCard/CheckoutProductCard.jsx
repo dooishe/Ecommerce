@@ -3,10 +3,10 @@ import dayjs from "dayjs";
 import { convertCentsToDollars } from "@/utils/money";
 import DeliveryOptions from "../DeliveryOptions/DeliveryOptions";
 function CheckoutProductCard({ cartProduct, deliveryOptions }) {
-  const [selectedOption, setSelectedOption] = useState(7);
+  const [selectedOptionDays, setSelectedOptionDays] = useState(7);
   function calculateDeliveryDate() {
     const time = dayjs();
-    const deliveryDate = time.add(selectedOption, "days");
+    const deliveryDate = time.add(selectedOptionDays, "days");
     return deliveryDate.format("dddd, MMMM D");
   }
   return (
@@ -44,8 +44,8 @@ function CheckoutProductCard({ cartProduct, deliveryOptions }) {
                   key={Option.id}
                   deliveryOption={Option}
                   cartProduct={cartProduct}
-                  selectedOption={selectedOption}
-                  setSelectedOption={setSelectedOption}
+                  selectedOptionDays={selectedOptionDays}
+                  setSelectedOptionDays={setSelectedOptionDays}
                 />
               );
             })}
