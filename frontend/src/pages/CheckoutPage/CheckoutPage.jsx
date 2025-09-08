@@ -4,25 +4,37 @@ import _ from "lodash";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader.jsx";
 import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard.jsx";
+import PaymentSummary from "./components/PaymentSummary/PaymentSummary.jsx";
 import "./CheckoutPage.css";
 
 function CheckoutPage({ cartProducts }) {
   const [deliveryOptions, setDeliveryOptions] = useState(null);
+  const [paymentSummary, setPaymentSummary] = useState(null);
   useTitle("Checkout");
   useFavicon("/favicons/cart-favicon.png");
   useEffect(() => {
-    try {
-      async function fetchDeliveryOptions() {
-        const { data } = await axios.get("/api/delivery-options");
-        setDeliveryOptions((prev) => {
-          return _.isEqual(prev, data) ? prev : data;
-        });
+    const fetchData = async () => {
+      try {
+        const [deliveryRes, paymentRes] = await Promise.all([
+          axios.get("/api/delivery-options"),
+          axios.get("/api/payment-summary"),
+        ]);
+
+        const delivery = deliveryRes.data;
+        const payment = paymentRes.data;
+
+        setDeliveryOptions((prev) =>
+          _.isEqual(prev, delivery) ? prev : delivery
+        );
+        setPaymentSummary((prev) =>
+          _.isEqual(prev, payment) ? prev : payment
+        );
+      } catch (er) {
+        console.error("something went wrong:", er);
       }
-      fetchDeliveryOptions();
-    } catch (er) {
-      console.log("something went wrong");
-      console.log(er);
-    }
+    };
+
+    fetchData();
   }, []);
   return (
     <>
@@ -41,38 +53,8 @@ function CheckoutPage({ cartProducts }) {
               );
             })}
           </div>
-
           <div className="payment-summary">
-            <div className="payment-summary-title">Payment Summary</div>
-
-            <div className="payment-summary-row">
-              <div>Items (3):</div>
-              <div className="payment-summary-money">$42.75</div>
-            </div>
-
-            <div className="payment-summary-row">
-              <div>Shipping &amp; handling:</div>
-              <div className="payment-summary-money">$4.99</div>
-            </div>
-
-            <div className="payment-summary-row subtotal-row">
-              <div>Total before tax:</div>
-              <div className="payment-summary-money">$47.74</div>
-            </div>
-
-            <div className="payment-summary-row">
-              <div>Estimated tax (10%):</div>
-              <div className="payment-summary-money">$4.77</div>
-            </div>
-
-            <div className="payment-summary-row total-row">
-              <div>Order total:</div>
-              <div className="payment-summary-money">$52.51</div>
-            </div>
-
-            <button className="place-order-button button-primary">
-              Place your order
-            </button>
+            <PaymentSummary paymentSummary={paymentSummary} />
           </div>
         </div>
       </div>
