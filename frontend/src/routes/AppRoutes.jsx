@@ -23,41 +23,18 @@ function AppRoutes() {
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              cartProducts={cartProducts}
-              setCartProducts={setCartProducts}
-            />
-          }
-        />
+        <Route path="/" element={<HomePage cartProducts={cartProducts} />} />
         <Route
           path="checkout"
-          element={
-            <CheckoutPage
-              cartProducts={cartProducts}
-              setCartProducts={setCartProducts}
-            />
-          }
+          element={<CheckoutPage cartProducts={cartProducts} />}
         />
         <Route
           path="orders"
-          element={
-            <OrdersPage
-              cartProducts={cartProducts}
-              setCartProducts={setCartProducts}
-            />
-          }
+          element={<OrdersPage cartProducts={cartProducts} />}
         />
         <Route
           path="tracking"
-          element={
-            <TrackingPage
-              cartProducts={cartProducts}
-              setCartProducts={setCartProducts}
-            />
-          }
+          element={<TrackingPage cartProducts={cartProducts} />}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

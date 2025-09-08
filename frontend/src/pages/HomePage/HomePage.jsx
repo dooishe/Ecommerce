@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import _ from "lodash";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import Header from "@/components/Header/Header";
 import HomeProductCard from "./components/homeProductCard/homeProductCard";
@@ -14,9 +13,7 @@ function HomePage({ cartProducts }) {
     async function fetchProducts() {
       try {
         const { data } = await axios.get("/api/products");
-        setProducts((prev) => {
-          return _.isEqual(prev, data) ? prev : data;
-        });
+        setProducts(data);
       } catch (error) {
         console.log("something went wrong: ", error);
       }

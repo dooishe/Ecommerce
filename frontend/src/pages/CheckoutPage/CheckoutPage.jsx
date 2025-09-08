@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import _ from "lodash";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader.jsx";
 import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard.jsx";
@@ -23,12 +22,8 @@ function CheckoutPage({ cartProducts }) {
         const delivery = deliveryRes.data;
         const payment = paymentRes.data;
 
-        setDeliveryOptions((prev) =>
-          _.isEqual(prev, delivery) ? prev : delivery
-        );
-        setPaymentSummary((prev) =>
-          _.isEqual(prev, payment) ? prev : payment
-        );
+        setDeliveryOptions(delivery);
+        setPaymentSummary(payment);
       } catch (er) {
         console.error("something went wrong:", er);
       }
