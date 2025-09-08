@@ -14,7 +14,6 @@ function OrdersPage({ cartProducts }) {
       try {
         const { data } = await axios.get("/api/orders?expand=products");
         setOrdersInfo(data);
-        console.log(data);
       } catch (error) {
         console.log("something went wrong: ", error);
       }

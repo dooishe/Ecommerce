@@ -3,7 +3,7 @@ function PaymentSummary({ paymentSummary }) {
   return (
     <>
       <div className="payment-summary-title">Payment Summary</div>
-      {paymentSummary && (
+      {
         <>
           <div className="payment-summary-row">
             <div>
@@ -47,7 +47,7 @@ function PaymentSummary({ paymentSummary }) {
             Place your order
           </button>
         </>
-      )}
+      }
     </>
   );
 }

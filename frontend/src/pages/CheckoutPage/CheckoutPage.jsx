@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
-import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader.jsx";
-import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard.jsx";
-import PaymentSummary from "./components/PaymentSummary/PaymentSummary.jsx";
+import CheckoutHeader from "./components/CheckoutHeader/CheckoutHeader";
+import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProductCard";
+import PaymentSummary from "./components/PaymentSummary";
 import "./CheckoutPage.css";
 
 function CheckoutPage({ cartProducts }) {
@@ -49,7 +49,9 @@ function CheckoutPage({ cartProducts }) {
             })}
           </div>
           <div className="payment-summary">
-            <PaymentSummary paymentSummary={paymentSummary} />
+            {paymentSummary && (
+              <PaymentSummary paymentSummary={paymentSummary} />
+            )}
           </div>
         </div>
       </div>

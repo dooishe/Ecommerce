@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import Header from "@/components/Header/Header";
-import HomeProductCard from "./components/homeProductCard/homeProductCard";
+import HomeProductCard from "./components/HomeProductCard";
 import "./HomePage.css";
 
 function HomePage({ cartProducts }) {

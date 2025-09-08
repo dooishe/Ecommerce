@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { convertCentsToDollars } from "@/utils/money.js";
-import OrderProduct from "./OrderProduct.jsx/OrderProduct";
+import OrderProduct from "./OrderProduct";
 function Order({ orderInfo }) {
   return (
     <>

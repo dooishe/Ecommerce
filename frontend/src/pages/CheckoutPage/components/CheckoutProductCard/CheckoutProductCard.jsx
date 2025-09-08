@@ -1,7 +1,7 @@
 import { useState } from "react";
 import dayjs from "dayjs";
-import { convertCentsToDollars } from "@/utils/money";
-import DeliveryOptions from "../DeliveryOptions/DeliveryOptions";
+import { convertCentsToDollars } from "@/utils/money.js";
+import DeliveryOptions from "./DeliveryOptions";
 function CheckoutProductCard({ cartProduct, deliveryOptions }) {
   const [selectedOptionDays, setSelectedOptionDays] = useState(7);
   function calculateDeliveryDate() {
