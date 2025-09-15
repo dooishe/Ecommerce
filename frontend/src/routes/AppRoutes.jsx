@@ -33,10 +33,13 @@ function AppRoutes() {
           element={<OrdersPage cartProducts={cartProducts} />}
         />
         <Route
-          path="tracking"
+          path="tracking/:orderId/:productId"
           element={<TrackingPage cartProducts={cartProducts} />}
         />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={<NotFoundPage cartProducts={cartProducts} />}
+        />
       </Routes>
     </>
   );

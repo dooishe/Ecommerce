@@ -10,7 +10,7 @@ function OrdersPage({ cartProducts }) {
   useTitle("Orders");
   useFavicon("/favicons/orders-favicon.png");
   useEffect(() => {
-    async function fetchOrdersInfo() {
+    async function fetchOrdersDetails() {
       try {
         const { data } = await axios.get("/api/orders?expand=products");
         setOrdersInfo(data);
@@ -18,7 +18,7 @@ function OrdersPage({ cartProducts }) {
         console.log("something went wrong: ", error);
       }
     }
-    fetchOrdersInfo();
+    fetchOrdersDetails();
   }, []);
   return (
     <>
