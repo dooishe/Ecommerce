@@ -34,6 +34,7 @@ function CheckoutPage({ cartProducts, loadCart }) {
                   key={cartProduct.productId}
                   cartProduct={cartProduct}
                   loadCart={loadCart}
+                  fetchPaymentSummary={fetchPaymentSummary}
                 />
               );
             })}

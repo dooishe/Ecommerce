@@ -4,7 +4,9 @@ import DeliveryDate from "./components/DeliveryDate";
 import CartItemDetails from "./components/CartItemDetails";
 function CheckoutProductCard({ cartProduct, loadCart, fetchPaymentSummary }) {
   const [deliveryOptions, setDeliveryOptions] = useState(null);
-  const [selectedOptionDays, setSelectedOptionDays] = useState(7);
+  const [selectedOptionId, setSelectedOptionId] = useState(
+    cartProduct.deliveryOptionId
+  );
   useEffect(() => {
     async function fetchDeliveryOptions() {
       try {
@@ -19,12 +21,18 @@ function CheckoutProductCard({ cartProduct, loadCart, fetchPaymentSummary }) {
   return (
     <>
       <div className="cart-item-container">
-        <DeliveryDate selectedOptionDays={selectedOptionDays} />
+        {deliveryOptions && (
+          <DeliveryDate
+            selectedOptionId={selectedOptionId}
+            deliveryOptions={deliveryOptions}
+          />
+        )}
+
         <CartItemDetails
           cartProduct={cartProduct}
           deliveryOptions={deliveryOptions}
-          selectedOptionDays={selectedOptionDays}
-          setSelectedOptionDays={setSelectedOptionDays}
+          selectedOptionId={selectedOptionId}
+          setSelectedOptionId={setSelectedOptionId}
           loadCart={loadCart}
           fetchPaymentSummary={fetchPaymentSummary}
         />

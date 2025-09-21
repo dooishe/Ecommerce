@@ -1,10 +1,12 @@
+import axios from "axios";
 import dayjs from "dayjs";
 import { convertCentsToDollars } from "@/utils/money.js";
 function DeliveryOptions({
   deliveryOption,
   cartProduct,
-  selectedOptionDays,
-  setSelectedOptionDays,
+  selectedOptionId,
+  setSelectedOptionId,
+  fetchPaymentSummary,
 }) {
   function calculateDeliveryDate() {
     const time = dayjs();
@@ -20,17 +22,23 @@ function DeliveryOptions({
     }
     return deliveryMessage;
   }
+  async function updateDeliveryOption() {
+    setSelectedOptionId(deliveryOption.id);
+    await axios.put(`/api/cart-items/${cartProduct.productId}`, {
+      deliveryOptionId: `${deliveryOption.id}`,
+    });
+    await fetchPaymentSummary();
+  }
+  console.log9;
   return (
     <>
-      <div className="delivery-option">
+      <label className="delivery-option">
         <input
           type="radio"
-          checked={deliveryOption.deliveryDays === selectedOptionDays}
+          checked={deliveryOption.id === selectedOptionId}
           className="delivery-option-input"
           name={`delivery-option-${cartProduct.productId}`}
-          onChange={() => {
-            setSelectedOptionDays(deliveryOption.deliveryDays);
-          }}
+          onChange={updateDeliveryOption}
         />
         <div>
           <div className="delivery-option-date">{calculateDeliveryDate()}</div>
@@ -38,7 +46,7 @@ function DeliveryOptions({
             {calculatedeliveryMessage()}
           </div>
         </div>
-      </div>
+      </label>
     </>
   );
 }

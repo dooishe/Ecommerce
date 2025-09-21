@@ -5,9 +5,10 @@ import { useState } from "react";
 function CartItemDetails({
   cartProduct,
   deliveryOptions,
-  selectedOptionDays,
-  setSelectedOptionDays,
+  selectedOptionId,
+  setSelectedOptionId,
   loadCart,
+  fetchPaymentSummary,
 }) {
   const [isEditing, setEditing] = useState(false);
   async function deleteCartProduct() {
@@ -78,8 +79,9 @@ function CartItemDetails({
                 key={option.id}
                 deliveryOption={option}
                 cartProduct={cartProduct}
-                selectedOptionDays={selectedOptionDays}
-                setSelectedOptionDays={setSelectedOptionDays}
+                selectedOptionId={selectedOptionId}
+                setSelectedOptionId={setSelectedOptionId}
+                fetchPaymentSummary={fetchPaymentSummary}
               />
             );
           })}

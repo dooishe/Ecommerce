@@ -1,8 +1,11 @@
 import dayjs from "dayjs";
-function DeliveryDate({ selectedOptionDays }) {
+function DeliveryDate({ deliveryOptions, selectedOptionId }) {
+  const selectedOption = deliveryOptions.find((option) => {
+    return option.id === selectedOptionId;
+  });
   function calculateDeliveryDate() {
     const time = dayjs();
-    const deliveryDate = time.add(selectedOptionDays, "days");
+    const deliveryDate = time.add(selectedOption.deliveryDays, "days");
     return deliveryDate.format("dddd, MMMM D");
   }
   return (
