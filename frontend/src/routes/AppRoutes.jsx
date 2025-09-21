@@ -8,13 +8,13 @@ import TrackingPage from "../pages/Tracking/TrackingPage.jsx";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage.jsx";
 function AppRoutes() {
   const [cartProducts, setCartProducts] = useState(null);
+  const loadCart = async function fetchCartProducts() {
+    const { data } = await axios.get("/api/cart-items?expand=product");
+    setCartProducts(data);
+  };
   useEffect(() => {
     try {
-      async function fetchCartProducts() {
-        const { data } = await axios.get("/api/cart-items?expand=product");
-        setCartProducts(data);
-      }
-      fetchCartProducts();
+      loadCart();
     } catch (er) {
       console.log("something went wrong");
       console.log(er);
@@ -23,10 +23,21 @@ function AppRoutes() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage cartProducts={cartProducts} />} />
+        <Route
+          path="/"
+          element={
+            <HomePage
+              loadCart={loadCart}
+              cartProducts={cartProducts}
+              setCartProducts={setCartProducts}
+            />
+          }
+        />
         <Route
           path="checkout"
-          element={<CheckoutPage cartProducts={cartProducts} />}
+          element={
+            <CheckoutPage cartProducts={cartProducts} loadCart={loadCart} />
+          }
         />
         <Route
           path="orders"

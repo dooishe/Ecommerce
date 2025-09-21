@@ -6,31 +6,21 @@ import CheckoutProductCard from "./components/CheckoutProductCard/CheckoutProduc
 import PaymentSummary from "./components/PaymentSummary";
 import "./CheckoutPage.css";
 
-function CheckoutPage({ cartProducts }) {
-  const [deliveryOptions, setDeliveryOptions] = useState(null);
+function CheckoutPage({ cartProducts, loadCart }) {
   const [paymentSummary, setPaymentSummary] = useState(null);
   useTitle("Checkout");
   useFavicon("/favicons/cart-favicon.png");
+  const fetchPaymentSummary = async () => {
+    try {
+      const { data } = await axios.get("/api/payment-summary");
+      setPaymentSummary(data);
+    } catch (error) {
+      console.error("something went wrong:", error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [deliveryRes, paymentRes] = await Promise.all([
-          axios.get("/api/delivery-options"),
-          axios.get("/api/payment-summary"),
-        ]);
-
-        const delivery = deliveryRes.data;
-        const payment = paymentRes.data;
-
-        setDeliveryOptions(delivery);
-        setPaymentSummary(payment);
-      } catch (er) {
-        console.error("something went wrong:", er);
-      }
-    };
-
-    fetchData();
-  }, []);
+    fetchPaymentSummary();
+  }, [cartProducts]);
   return (
     <>
       <CheckoutHeader cartProducts={cartProducts} />
@@ -43,7 +33,7 @@ function CheckoutPage({ cartProducts }) {
                 <CheckoutProductCard
                   key={cartProduct.productId}
                   cartProduct={cartProduct}
-                  deliveryOptions={deliveryOptions}
+                  loadCart={loadCart}
                 />
               );
             })}

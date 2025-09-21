@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import HomeProductCard from "./components/HomeProductCard";
 import "./HomePage.css";
 
-function HomePage({ cartProducts }) {
+function HomePage({ cartProducts, loadCart }) {
   const [products, setProducts] = useState(null);
   useTitle("Home");
   useFavicon("/favicons/home-favicon.png");
@@ -26,7 +26,13 @@ function HomePage({ cartProducts }) {
       <div className="home-page">
         <div className="products-grid">
           {products?.map((product) => {
-            return <HomeProductCard key={product.id} product={product} />;
+            return (
+              <HomeProductCard
+                key={product.id}
+                product={product}
+                loadCart={loadCart}
+              />
+            );
           })}
         </div>
       </div>

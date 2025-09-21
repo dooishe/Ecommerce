@@ -1,11 +1,30 @@
+import axios from "axios";
 import { convertCentsToDollars } from "@/utils/money.js";
-import DeliveryOptions from "./DeliveryOptions";
+import DeliveryOption from "./DeliveryOption";
+import { useState } from "react";
 function CartItemDetails({
   cartProduct,
   deliveryOptions,
   selectedOptionDays,
   setSelectedOptionDays,
+  loadCart,
 }) {
+  const [isEditing, setEditing] = useState(false);
+  async function deleteCartProduct() {
+    await axios.delete(`/api/cart-items/${cartProduct.productId}`);
+    loadCart();
+  }
+  function isNumeric(value) {
+    return !isNaN(value) && value.trim() !== "";
+  }
+  async function updateQuantity(quantity) {
+    await axios.put(`/api/cart-items/${cartProduct.productId}`, {
+      quantity,
+      deliveryOptionId: "1",
+    });
+    await loadCart();
+    setEditing(false);
+  }
   return (
     <>
       <div className="cart-item-details-grid">
@@ -19,10 +38,33 @@ function CartItemDetails({
           <div className="product-quantity">
             <span>
               Quantity:
-              <span className="quantity-label">{cartProduct.quantity}</span>
+              {isEditing ? (
+                <input
+                  onKeyDown={(event) => {
+                    const value = event.target.value;
+                    if (event.key === "Enter" && isNumeric(value)) {
+                      updateQuantity(Number(value));
+                    }
+                  }}
+                ></input>
+              ) : (
+                <span className="quantity-label">{cartProduct.quantity}</span>
+              )}
             </span>
-            <span className="update-quantity-link link-primary">Update</span>
-            <span className="delete-quantity-link link-primary">Delete</span>
+            <span
+              className="update-quantity-link link-primary"
+              onClick={() => {
+                setEditing(true);
+              }}
+            >
+              Update
+            </span>
+            <span
+              className="delete-quantity-link link-primary"
+              onClick={deleteCartProduct}
+            >
+              Delete
+            </span>
           </div>
         </div>
 
@@ -30,11 +72,11 @@ function CartItemDetails({
           <div className="delivery-options-title">
             Choose a delivery option:
           </div>
-          {deliveryOptions?.map((Option) => {
+          {deliveryOptions?.map((option) => {
             return (
-              <DeliveryOptions
-                key={Option.id}
-                deliveryOption={Option}
+              <DeliveryOption
+                key={option.id}
+                deliveryOption={option}
                 cartProduct={cartProduct}
                 selectedOptionDays={selectedOptionDays}
                 setSelectedOptionDays={setSelectedOptionDays}

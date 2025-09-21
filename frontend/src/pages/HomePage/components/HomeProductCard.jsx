@@ -1,6 +1,24 @@
+import { useState } from "react";
+import axios from "axios";
 import { convertCentsToDollars } from "@/utils/money";
 import checkmark from "@/assets/icons/checkmark.png";
-function HomeProductCard({ product }) {
+
+function HomeProductCard({ product, loadCart }) {
+  const [quantity, setQuantity] = useState(1);
+  async function addToCart() {
+    try {
+      await axios.post("/api/cart-items", {
+        productId: product.id,
+        quantity,
+      });
+      loadCart();
+    } catch (error) {
+      console.log("something went wrong", error);
+    }
+  }
+  function changeValue(event) {
+    setQuantity(Number(event.target.value));
+  }
   return (
     <>
       <div key={product.id} className="product-container">
@@ -27,7 +45,7 @@ function HomeProductCard({ product }) {
         </div>
 
         <div className="product-quantity-container">
-          <select>
+          <select value={quantity} onChange={changeValue}>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -48,7 +66,10 @@ function HomeProductCard({ product }) {
           Added
         </div>
 
-        <button className="add-to-cart-button button-primary">
+        <button
+          className="add-to-cart-button button-primary"
+          onClick={addToCart}
+        >
           Add to Cart
         </button>
       </div>
