@@ -7,6 +7,7 @@ import PaymentSummary from "./components/PaymentSummary";
 import "./CheckoutPage.css";
 
 function CheckoutPage({ cartProducts, loadCart }) {
+  const [deliveryOptions, setDeliveryOptions] = useState(null);
   const [paymentSummary, setPaymentSummary] = useState(null);
   useTitle("Checkout");
   useFavicon("/favicons/cart-favicon.png");
@@ -18,6 +19,17 @@ function CheckoutPage({ cartProducts, loadCart }) {
       console.error("something went wrong:", error);
     }
   };
+  useEffect(() => {
+    async function fetchDeliveryOptions() {
+      try {
+        const { data } = await axios.get("/api/delivery-options");
+        setDeliveryOptions(data);
+      } catch (error) {
+        console.error("something went wrong:", error);
+      }
+    }
+    fetchDeliveryOptions();
+  }, []);
   useEffect(() => {
     fetchPaymentSummary();
   }, [cartProducts]);
@@ -31,6 +43,7 @@ function CheckoutPage({ cartProducts, loadCart }) {
             {cartProducts?.map((cartProduct) => {
               return (
                 <CheckoutProductCard
+                  deliveryOptions={deliveryOptions}
                   key={cartProduct.productId}
                   cartProduct={cartProduct}
                   loadCart={loadCart}

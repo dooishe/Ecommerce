@@ -1,7 +1,8 @@
+import { useState, useRef } from "react";
 import axios from "axios";
 import { convertCentsToDollars } from "@/utils/money.js";
+import { isValidNumber } from "@/utils/validationUtils";
 import DeliveryOption from "./DeliveryOption";
-import { useState } from "react";
 function CartItemDetails({
   cartProduct,
   deliveryOptions,
@@ -10,21 +11,34 @@ function CartItemDetails({
   loadCart,
   fetchPaymentSummary,
 }) {
+  const updateButtonRef = useRef(null);
   const [isEditing, setEditing] = useState(false);
   async function deleteCartProduct() {
     await axios.delete(`/api/cart-items/${cartProduct.productId}`);
     loadCart();
   }
-  function isNumeric(value) {
-    return !isNaN(value) && value.trim() !== "";
-  }
   async function updateQuantity(quantity) {
     await axios.put(`/api/cart-items/${cartProduct.productId}`, {
       quantity,
-      deliveryOptionId: "1",
     });
     await loadCart();
     setEditing(false);
+  }
+  function handleInputOnKeyDown(event) {
+    const value = event.target.value;
+    if (event.key === "Enter" && isValidNumber(value)) {
+      updateQuantity(Number(value));
+    }
+  }
+  function handleUpdateButtonClick() {
+    if (!isEditing) {
+      setEditing(true);
+    } else {
+      const value = updateButtonRef.current.value;
+      if (isValidNumber(value)) {
+        updateQuantity(Number(value));
+      }
+    }
   }
   return (
     <>
@@ -41,12 +55,9 @@ function CartItemDetails({
               Quantity:
               {isEditing ? (
                 <input
-                  onKeyDown={(event) => {
-                    const value = event.target.value;
-                    if (event.key === "Enter" && isNumeric(value)) {
-                      updateQuantity(Number(value));
-                    }
-                  }}
+                  ref={updateButtonRef}
+                  className="js-input-quantity"
+                  onKeyDown={handleInputOnKeyDown}
                 ></input>
               ) : (
                 <span className="quantity-label">{cartProduct.quantity}</span>
@@ -54,9 +65,7 @@ function CartItemDetails({
             </span>
             <span
               className="update-quantity-link link-primary"
-              onClick={() => {
-                setEditing(true);
-              }}
+              onClick={handleUpdateButtonClick}
             >
               Update
             </span>
