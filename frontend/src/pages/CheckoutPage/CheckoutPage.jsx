@@ -54,7 +54,11 @@ function CheckoutPage({ cartProducts, loadCart }) {
           </div>
           <div className="payment-summary">
             {paymentSummary && (
-              <PaymentSummary paymentSummary={paymentSummary} />
+              <PaymentSummary
+                paymentSummary={paymentSummary}
+                loadCart={loadCart}
+                cartProducts={cartProducts}
+              />
             )}
           </div>
         </div>
