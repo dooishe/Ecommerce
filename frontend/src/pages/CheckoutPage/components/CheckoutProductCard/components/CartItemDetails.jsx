@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import { convertCentsToDollars } from "@/utils/money.js";
-import { isValidNumber } from "@/utils/validationUtils";
+import { isStringValidIntegerNumberGreaterZeroBelowOneHundred } from "@/utils/validationUtils";
 import DeliveryOption from "./DeliveryOption";
 function CartItemDetails({
   cartProduct,
@@ -17,27 +17,25 @@ function CartItemDetails({
     await axios.delete(`/api/cart-items/${cartProduct.productId}`);
     loadCart();
   }
-  async function updateQuantity(quantity) {
-    await axios.put(`/api/cart-items/${cartProduct.productId}`, {
-      quantity,
-    });
-    await loadCart();
-    setEditing(false);
+  async function updateQuantityIfValid(quantity) {
+    if (isStringValidIntegerNumberGreaterZeroBelowOneHundred(quantity)) {
+      quantity = Number(quantity);
+      await axios.put(`/api/cart-items/${cartProduct.productId}`, {
+        quantity,
+      });
+      await loadCart();
+      setEditing(false);
+    }
   }
   function handleInputOnKeyDown(event) {
-    const value = event.target.value;
-    if (event.key === "Enter" && isValidNumber(value)) {
-      updateQuantity(Number(value));
-    }
+    if (event.key !== "Enter") return;
+    updateQuantityIfValid(event.target.value);
   }
   function handleUpdateButtonClick() {
     if (!isEditing) {
       setEditing(true);
     } else {
-      const value = updateButtonRef.current.value;
-      if (isValidNumber(value)) {
-        updateQuantity(Number(value));
-      }
+      updateQuantityIfValid(updateButtonRef.current.value);
     }
   }
   return (
@@ -56,6 +54,7 @@ function CartItemDetails({
               {isEditing ? (
                 <input
                   ref={updateButtonRef}
+                  defaultValue={cartProduct.quantity}
                   className="js-input-quantity"
                   onKeyDown={handleInputOnKeyDown}
                 ></input>
