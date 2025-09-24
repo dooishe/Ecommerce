@@ -17,29 +17,28 @@ function CartItemDetails({
     await axios.delete(`/api/cart-items/${cartProduct.productId}`);
     loadCart();
   }
-  async function updateQuantityIfValid(quantity) {
-    if (isStringValidIntegerNumberGreaterZeroBelowOneHundred(quantity)) {
-      quantity = Number(quantity);
+  async function updateQuantityIfValid() {
+    if (!isEditing) {
+      setEditing(true);
+    } else if (isStringValidIntegerNumberGreaterZeroBelowOneHundred(quantity)) {
+      const newQuantity = Number(quantity);
       await axios.put(`/api/cart-items/${cartProduct.productId}`, {
-        quantity,
+        quantity: newQuantity,
       });
       await loadCart();
       setEditing(false);
     }
   }
+  function updateQuantityInput(event) {
+    setQuantity(event.target.value);
+  }
   function handleInputOnKeyDown(event) {
-    if (event.key === "Escape") {
+    if (event.key === "Enter") {
+      updateQuantityIfValid();
+    } else if (event.key === "Escape") {
+      setQuantity(cartProduct.quantity);
       setEditing(false);
       return;
-    }
-    if (event.key !== "Enter") return;
-    updateQuantityIfValid(quantity);
-  }
-  function handleUpdateButtonClick() {
-    if (!isEditing) {
-      setEditing(true);
-    } else {
-      updateQuantityIfValid(quantity);
     }
   }
   return (
@@ -59,9 +58,7 @@ function CartItemDetails({
                 <input
                   type="text"
                   value={quantity}
-                  onChange={(e) => {
-                    setQuantity(e.target.value);
-                  }}
+                  onChange={updateQuantityInput}
                   className="input-quantity"
                   onKeyDown={handleInputOnKeyDown}
                 />
@@ -71,7 +68,7 @@ function CartItemDetails({
             </span>
             <span
               className="update-quantity-link link-primary"
-              onClick={handleUpdateButtonClick}
+              onClick={updateQuantityIfValid}
             >
               Update
             </span>
