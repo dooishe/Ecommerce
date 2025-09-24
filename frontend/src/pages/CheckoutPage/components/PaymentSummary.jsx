@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { convertCentsToDollars } from "@/utils/money.js";
+import { convertCentsToDollars } from "@/utils/money";
 function PaymentSummary({ paymentSummary, loadCart, cartProducts }) {
   const navigate = useNavigate();
   async function createOrder() {

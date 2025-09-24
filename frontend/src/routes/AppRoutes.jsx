@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
-import HomePage from "../pages/HomePage/HomePage.jsx";
-import CheckoutPage from "../pages/CheckoutPage/CheckoutPage.jsx";
-import OrdersPage from "../pages/Orders/OrdersPage.jsx";
-import TrackingPage from "../pages/Tracking/TrackingPage.jsx";
-import NotFoundPage from "../pages/NotFoundPage/NotFoundPage.jsx";
+import HomePage from "../pages/HomePage/HomePage";
+import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
+import OrdersPage from "../pages/Orders/OrdersPage";
+import TrackingPage from "../pages/Tracking/TrackingPage";
+import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 function AppRoutes() {
   const [cartProducts, setCartProducts] = useState(null);
   const loadCart = async function fetchCartProducts() {

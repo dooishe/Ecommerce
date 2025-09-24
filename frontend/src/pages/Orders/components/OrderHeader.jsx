@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { convertCentsToDollars } from "@/utils/money.js";
+import { convertCentsToDollars } from "@/utils/money";
 function OrderHeader({ orderInfo }) {
   return (
     <>

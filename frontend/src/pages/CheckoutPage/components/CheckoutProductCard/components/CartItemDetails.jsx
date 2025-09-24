@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { convertCentsToDollars } from "@/utils/money.js";
+import { convertCentsToDollars } from "@/utils/money";
 import { isStringValidIntegerNumberGreaterZeroBelowOneHundred } from "@/utils/validationUtils";
 import DeliveryOption from "./DeliveryOption";
 function CartItemDetails({
