@@ -1,13 +1,24 @@
 import { Link } from "react-router-dom";
+import axios from "axios";
 import dayjs from "dayjs";
 import buyAgain from "@/assets/icons/buy-again.png";
-function OrderProduct({ product, orderInfo }) {
+function OrderProduct({ product, orderInfo, loadCart }) {
+  async function addToCart() {
+    try {
+      await axios.post("/api/cart-items", {
+        productId: product.productId,
+        quantity: 1,
+      });
+      loadCart();
+    } catch (error) {
+      console.log("something went wrong", error);
+    }
+  }
   return (
     <>
       <div className="product-image-container">
         <img src={product.product.image} />
       </div>
-
       <div className="product-details">
         <div className="product-name">{product.product.name}</div>
         <div className="product-delivery-date">
@@ -17,7 +28,9 @@ function OrderProduct({ product, orderInfo }) {
         <div className="product-quantity">Quantity: {product.quantity}</div>
         <button className="buy-again-button button-primary">
           <img className="buy-again-icon" src={buyAgain} />
-          <span className="buy-again-message">Add to Cart</span>
+          <span className="buy-again-message" onClick={addToCart}>
+            Add to Cart
+          </span>
         </button>
       </div>
 

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { convertCentsToDollars } from "@/utils/money.js";
 import { isStringValidIntegerNumberGreaterZeroBelowOneHundred } from "@/utils/validationUtils";
@@ -11,8 +11,8 @@ function CartItemDetails({
   loadCart,
   fetchPaymentSummary,
 }) {
-  const updateButtonRef = useRef(null);
   const [isEditing, setEditing] = useState(false);
+  const [quantity, setQuantity] = useState(cartProduct.quantity);
   async function deleteCartProduct() {
     await axios.delete(`/api/cart-items/${cartProduct.productId}`);
     loadCart();
@@ -28,14 +28,18 @@ function CartItemDetails({
     }
   }
   function handleInputOnKeyDown(event) {
+    if (event.key === "Escape") {
+      setEditing(false);
+      return;
+    }
     if (event.key !== "Enter") return;
-    updateQuantityIfValid(event.target.value);
+    updateQuantityIfValid(quantity);
   }
   function handleUpdateButtonClick() {
     if (!isEditing) {
       setEditing(true);
     } else {
-      updateQuantityIfValid(updateButtonRef.current.value);
+      updateQuantityIfValid(quantity);
     }
   }
   return (
@@ -53,11 +57,14 @@ function CartItemDetails({
               Quantity:
               {isEditing ? (
                 <input
-                  ref={updateButtonRef}
-                  defaultValue={cartProduct.quantity}
-                  className="js-input-quantity"
+                  type="text"
+                  value={quantity}
+                  onChange={(e) => {
+                    setQuantity(e.target.value);
+                  }}
+                  className="input-quantity"
                   onKeyDown={handleInputOnKeyDown}
-                ></input>
+                />
               ) : (
                 <span className="quantity-label">{cartProduct.quantity}</span>
               )}

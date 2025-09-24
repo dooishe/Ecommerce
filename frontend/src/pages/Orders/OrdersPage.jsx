@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import Order from "./components/Order";
 import "./OrdersPage.css";
 
-function OrdersPage({ cartProducts }) {
+function OrdersPage({ cartProducts, loadCart }) {
   const [ordersInfo, setOrdersInfo] = useState(null);
   useTitle("Orders");
   useFavicon("/favicons/orders-favicon.png");
@@ -27,7 +27,13 @@ function OrdersPage({ cartProducts }) {
         <div className="page-title">Your Orders</div>
         <div className="orders-grid">
           {ordersInfo?.map((orderInfo) => {
-            return <Order key={orderInfo.id} orderInfo={orderInfo} />;
+            return (
+              <Order
+                key={orderInfo.id}
+                orderInfo={orderInfo}
+                loadCart={loadCart}
+              />
+            );
           })}
         </div>
       </div>

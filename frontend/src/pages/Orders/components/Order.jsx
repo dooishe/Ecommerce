@@ -1,6 +1,6 @@
 import OrderHeader from "./OrderHeader";
 import OrderProduct from "./OrderProduct";
-function Order({ orderInfo }) {
+function Order({ orderInfo, loadCart }) {
   return (
     <>
       <div className="order-container">
@@ -12,6 +12,7 @@ function Order({ orderInfo }) {
                 key={product.productId}
                 product={product}
                 orderInfo={orderInfo}
+                loadCart={loadCart}
               />
             );
           })}

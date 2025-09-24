@@ -1,21 +1,32 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import clsx from "clsx";
 import { convertCentsToDollars } from "@/utils/money";
 import checkmark from "@/assets/icons/checkmark.png";
 
 function HomeProductCard({ product, loadCart }) {
   const [quantity, setQuantity] = useState(1);
-  async function addToCart() {
+  const [showMessage, setShowMessage] = useState(false);
+  const timer = useRef();
+  useEffect(() => {
+    return () => clearTimeout(timer.current);
+  }, []);
+  const addToCart = async () => {
     try {
       await axios.post("/api/cart-items", {
         productId: product.id,
         quantity,
       });
-      loadCart();
+      await loadCart();
+      setShowMessage(true);
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
     } catch (error) {
       console.log("something went wrong", error);
     }
-  }
+  };
   function changeValue(event) {
     setQuantity(Number(event.target.value));
   }
@@ -26,9 +37,7 @@ function HomeProductCard({ product, loadCart }) {
           <img className="product-image" src={product.image} />
         </div>
 
-        <div className="product-name limit-text-to-2-lines">
-          Black and Gray Athletic Cotton Socks - 6 Pairs
-        </div>
+        <div className="product-name limit-text-to-2-lines">{product.name}</div>
 
         <div className="product-rating-container">
           <img
@@ -61,7 +70,7 @@ function HomeProductCard({ product, loadCart }) {
 
         <div className="product-spacer"></div>
 
-        <div className="added-to-cart">
+        <div className={clsx("added-to-cart", { visible: showMessage })}>
           <img src={checkmark} />
           Added
         </div>
