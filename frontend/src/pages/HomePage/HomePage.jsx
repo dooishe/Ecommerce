@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router";
 import axios from "axios";
 import { useFavicon, useTitle } from "@/hooks/usePageMeta";
 import Header from "@/components/Header/Header";
-import HomeProductCard from "./components/HomeProductCard";
+import HomeProduct from "./components/HomeProduct";
 import "./HomePage.css";
 
 function HomePage({ cartProducts, loadCart }) {
@@ -33,7 +33,7 @@ function HomePage({ cartProducts, loadCart }) {
         <div className="products-grid">
           {products?.map((product) => {
             return (
-              <HomeProductCard
+              <HomeProduct
                 key={product.id}
                 product={product}
                 loadCart={loadCart}

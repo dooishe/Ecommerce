@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { convertCentsToDollars } from "@/utils/money";
 import checkmark from "@/assets/icons/checkmark.png";
 
-function HomeProductCard({ product, loadCart }) {
+function HomeProduct({ product, loadCart }) {
   const [quantity, setQuantity] = useState(1);
   const [showMessage, setShowMessage] = useState(false);
   const timer = useRef();
@@ -32,9 +32,17 @@ function HomeProductCard({ product, loadCart }) {
   }
   return (
     <>
-      <div key={product.id} className="product-container">
+      <div
+        data-testid={"home-product"}
+        key={product.id}
+        className="product-container"
+      >
         <div className="product-image-container">
-          <img className="product-image" src={product.image} />
+          <img
+            className="product-image"
+            src={product.image}
+            alt={product.name}
+          />
         </div>
 
         <div className="product-name limit-text-to-2-lines">{product.name}</div>
@@ -43,6 +51,7 @@ function HomeProductCard({ product, loadCart }) {
           <img
             className="product-rating-stars"
             src={`images/ratings/rating-${product.rating.stars * 10}.png`}
+            alt={"reviews"}
           />
           <div className="product-rating-count link-primary">
             {product.rating.count}
@@ -71,7 +80,7 @@ function HomeProductCard({ product, loadCart }) {
         <div className="product-spacer"></div>
 
         <div className={clsx("added-to-cart", { visible: showMessage })}>
-          <img src={checkmark} />
+          <img src={checkmark} alt="Added to cart checkmark" />
           Added
         </div>
 
@@ -86,4 +95,4 @@ function HomeProductCard({ product, loadCart }) {
   );
 }
 
-export default HomeProductCard;
+export default HomeProduct;
