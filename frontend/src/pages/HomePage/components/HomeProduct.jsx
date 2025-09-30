@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import clsx from "clsx";
-import { convertCentsToDollars } from "@/utils/money";
+import { convertCentsToDollars } from "../../../utils/money";
 import checkmark from "@/assets/icons/checkmark.png";
 
 function HomeProduct({ product, loadCart }) {
@@ -79,7 +79,10 @@ function HomeProduct({ product, loadCart }) {
 
         <div className="product-spacer"></div>
 
-        <div className={clsx("added-to-cart", { visible: showMessage })}>
+        <div
+          className={clsx("added-to-cart", { visible: showMessage })}
+          data-testid="added-message"
+        >
           <img src={checkmark} alt="Added to cart checkmark" />
           Added
         </div>
