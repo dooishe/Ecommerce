@@ -25,13 +25,7 @@ function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={
-            <HomePage
-              loadCart={loadCart}
-              cartProducts={cartProducts}
-              setCartProducts={setCartProducts}
-            />
-          }
+          element={<HomePage loadCart={loadCart} cartProducts={cartProducts} />}
         />
         <Route
           path="checkout"
