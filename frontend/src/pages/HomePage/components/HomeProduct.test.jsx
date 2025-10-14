@@ -8,6 +8,7 @@ vi.mock("axios");
 describe("HomeProduct component", () => {
   let mockProduct;
   let loadCartMock;
+  let user;
   beforeEach(() => {
     mockProduct = {
       keywords: ["socks", "sports", "apparel"],
@@ -21,6 +22,7 @@ describe("HomeProduct component", () => {
       priceCents: 1090,
     };
     loadCartMock = vi.fn().mockResolvedValue(undefined);
+    user = userEvent.setup();
   });
   it("Displays product details correctly", () => {
     render(<HomeProduct product={mockProduct} loadCart={loadCartMock} />);
@@ -41,10 +43,11 @@ describe("HomeProduct component", () => {
     expect(screen.getByText("$10.90")).toBeInTheDocument();
     expect(screen.getByAltText("Added to cart checkmark")).toBeInTheDocument();
   });
-  it("adds product to the cart", async () => {
+
+  it("adds product to the cart with different quantity", async () => {
     vi.spyOn(axios, "post").mockResolvedValue({ data: {} });
     render(<HomeProduct product={mockProduct} loadCart={loadCartMock} />);
-    const user = userEvent.setup();
+
     const addToCartButton = screen.getByRole("button", {
       name: /add to cart/i,
     });
