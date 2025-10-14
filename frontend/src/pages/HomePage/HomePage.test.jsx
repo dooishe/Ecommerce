@@ -1,9 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
 import axios from "axios";
 import HomePage from "./HomePage";
-import HomeProduct from "./components/HomeProduct";
 import { expect, it, describe, vi, beforeEach } from "vitest";
 vi.mock("axios");
 
@@ -11,6 +9,7 @@ describe("HomePage component", () => {
   let cartProductsMock;
   let loadCartMock;
   beforeEach(() => {
+    vi.clearAllMocks();
     cartProductsMock = [];
     loadCartMock = vi.fn().mockResolvedValue(undefined);
     vi.spyOn(axios, "get").mockImplementation((urlPath) => {
@@ -45,7 +44,7 @@ describe("HomePage component", () => {
             },
           ],
         };
-      } else if (urlPath === "/api/products?search_query=socks") {
+      } else if (urlPath === "/api/products?search=socks") {
         return {
           data: [
             {
@@ -82,11 +81,15 @@ describe("HomePage component", () => {
         </Routes>
       </MemoryRouter>
     );
-    await waitFor(() => {
-      expect(
-        screen.findByText("Black and Gray Athletic Cotton Socks - 6 Pairs")
-      ).toBeInTheDocument();
-    });
+    const productElements = await screen.findAllByTestId("product-container");
+    expect(productElements.length).toBe(1);
+    expect(
+      within(productElements[0]).getByText(
+        "Black and Gray Athletic Cotton Socks - 6 Pairs"
+      )
+    ).toBeInTheDocument();
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith("/api/products?search=socks");
   });
   it("render the products correctly with no search_query", async () => {
     render(
@@ -104,5 +107,17 @@ describe("HomePage component", () => {
         </Routes>
       </MemoryRouter>
     );
+    const productElements = await screen.findAllByTestId("product-container");
+    expect(productElements.length).toBe(2);
+    expect(
+      within(productElements[0]).getByText(
+        "Black and Gray Athletic Cotton Socks - 6 Pairs"
+      )
+    ).toBeInTheDocument();
+    expect(
+      within(productElements[1]).getByText("Intermediate Size Basketball")
+    ).toBeInTheDocument();
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith("/api/products");
   });
 });

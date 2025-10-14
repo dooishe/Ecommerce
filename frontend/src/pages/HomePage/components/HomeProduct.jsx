@@ -33,7 +33,7 @@ function HomeProduct({ product, loadCart }) {
   return (
     <>
       <div
-        data-testid={"home-product"}
+        data-testid={"product-container"}
         key={product.id}
         className="product-container"
       >
