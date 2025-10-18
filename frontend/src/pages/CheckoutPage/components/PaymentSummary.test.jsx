@@ -134,5 +134,31 @@ describe("PaymentSummary component", () => {
     expect(loadCartMock).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId("url-path")).toHaveTextContent("/orders");
   });
-  it("if cartProducts empty array Create order button can not adds order", async () => {});
+
+  it("if cartProducts empty array create order button can not adds order", async () => {
+    cartProductsMock = [];
+    vi.spyOn(axios, "post");
+    render(
+      <MemoryRouter initialEntries={["/checkout"]}>
+        <Routes>
+          <Route
+            path="/checkout"
+            element={
+              <PaymentSummary
+                paymentSummary={paymentSummaryMock}
+                loadCart={loadCartMock}
+                cartProducts={cartProductsMock}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+    const createOrderButton = screen.getByRole("button", {
+      name: /place your order/i,
+    });
+    await user.click(createOrderButton);
+    expect(axios.post).toHaveBeenCalledTimes(0);
+    expect(loadCartMock).toHaveBeenCalledTimes(0);
+  });
 });

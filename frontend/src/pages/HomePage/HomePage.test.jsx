@@ -1,17 +1,22 @@
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { userEvent } from "@testing-library/user-event";
 import axios from "axios";
 import HomePage from "./HomePage";
 import { expect, it, describe, vi, beforeEach } from "vitest";
 vi.mock("axios");
 
-describe("HomePage component", () => {
+describe("HomePage component (unit/integration)", () => {
   let cartProductsMock;
   let loadCartMock;
   beforeEach(() => {
     vi.clearAllMocks();
     cartProductsMock = [];
     loadCartMock = vi.fn().mockResolvedValue(undefined);
+    vi.spyOn(axios, "post").mockImplementation((urlPath, productInfo) => {
+      cartProductsMock.push({ quantity: productInfo.quantity });
+      return { data: {} };
+    });
     vi.spyOn(axios, "get").mockImplementation((urlPath) => {
       if (urlPath === "/api/products") {
         return {
@@ -119,5 +124,51 @@ describe("HomePage component", () => {
     ).toBeInTheDocument();
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith("/api/products");
+  });
+  describe("integration test HomeProduct + Header", () => {
+    it("in HomeProduct 'add product button' updates cartProducts quantity in the Header", async () => {
+      const { rerender } = render(
+        <MemoryRouter initialEntries={["/"]}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <HomePage
+                  cartProducts={cartProductsMock}
+                  loadCart={loadCartMock}
+                />
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      );
+      const productElements = await screen.findAllByTestId("product-container");
+      const addToCartButton = within(productElements[0]).getByRole("button", {
+        name: /add to cart/i,
+      });
+      const select = within(productElements[0]).getByRole("combobox");
+      expect(await screen.findByTestId("cart-quantity")).toHaveTextContent(0);
+      const user = userEvent.setup();
+      await user.selectOptions(select, "3");
+      await user.click(addToCartButton);
+      expect(axios.post).toHaveBeenCalledOnce();
+      expect(loadCartMock).toHaveBeenCalledOnce();
+      rerender(
+        <MemoryRouter initialEntries={["/"]}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <HomePage
+                  cartProducts={cartProductsMock}
+                  loadCart={loadCartMock}
+                />
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      );
+      expect(await screen.findByTestId("cart-quantity")).toHaveTextContent(3);
+    });
   });
 });
