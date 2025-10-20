@@ -12,7 +12,7 @@ function Header({ cartProducts }) {
   });
   const navigate = useNavigate();
   function calculateCartQuantity() {
-    if (cartProducts === null) return 0;
+    if (!cartProducts) return 0;
     let totalQuantity = 0;
     cartProducts.forEach((cartProduct) => {
       totalQuantity += cartProduct.quantity;
@@ -35,9 +35,13 @@ function Header({ cartProducts }) {
     <>
       <div className="header">
         <div className="left-section">
-          <NavLink to="/" className="header-link">
-            <img className="logo" src={logoWhite} />
-            <img className="mobile-logo" src={mobileLogoWhite} />
+          <NavLink to="/" className="header-link" aria-label="Home link">
+            <img className="logo" data-testid="logo" src={logoWhite} />
+            <img
+              className="mobile-logo"
+              data-testid="mobile-logo"
+              src={mobileLogoWhite}
+            />
           </NavLink>
         </div>
 
@@ -56,7 +60,11 @@ function Header({ cartProducts }) {
           />
 
           <button className="search-button" onClick={searchProducts}>
-            <img className="search-icon" src={searchIcon} />
+            <img
+              className="search-icon"
+              data-testid="search-icon"
+              src={searchIcon}
+            />
           </button>
         </div>
 
@@ -66,12 +74,17 @@ function Header({ cartProducts }) {
               "orders-link header-link" + (isActive ? " active-link" : "")
             }
             to="/orders"
+            aria-label="Orders link"
           >
             <span className="orders-text">Orders</span>
           </NavLink>
 
-          <NavLink className="cart-link header-link" to="/checkout">
-            <img className="cart-icon" src={cartIcon} />
+          <NavLink
+            className="cart-link header-link"
+            to="/checkout"
+            aria-label="Cart link"
+          >
+            <img className="cart-icon" data-testid="cart-icon" src={cartIcon} />
             <div className="cart-quantity" data-testid="cart-quantity">
               {calculateCartQuantity()}
             </div>
