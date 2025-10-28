@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import "./Header.css";
 import searchIcon from "@/assets/icons/search-icon.png";
 import cartIcon from "@/assets/icons/cart-icon.png";
 import logoWhite from "@/assets/logos/logo-white.png";
 import mobileLogoWhite from "@/assets/logos/mobile-logo-white.png";
 function Header({ cartProducts }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [search, setSearch] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     return params.get("search_query") || "";
   });
-  const navigate = useNavigate();
   function calculateCartQuantity() {
     if (!cartProducts) return 0;
     let totalQuantity = 0;
@@ -59,7 +60,11 @@ function Header({ cartProducts }) {
             placeholder="Search"
           />
 
-          <button className="search-button" onClick={searchProducts}>
+          <button
+            className="search-button"
+            data-testid="search-button"
+            onClick={searchProducts}
+          >
             <img
               className="search-icon"
               data-testid="search-icon"

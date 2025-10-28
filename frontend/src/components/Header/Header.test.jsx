@@ -1,12 +1,23 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Router } from "react-router-dom";
+import { userEvent } from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
-import { expect, it, describe, beforeEach } from "vitest";
+import { expect, it, vi, describe, beforeEach } from "vitest";
 import Header from "./Header";
-
+const navigateMock = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
 describe("Header component", () => {
   let cartProductsMock;
+  let user;
   beforeEach(() => {
+    vi.clearAllMocks();
+    user = userEvent.setup();
     cartProductsMock = [
       {
         id: 1,
@@ -91,7 +102,7 @@ describe("Header component", () => {
     const cartLink = screen.getByRole("link", { name: /cart link/i });
     expect(cartLink).toHaveAttribute("href", "/checkout");
   });
-  it("when it is OrderPage order link is active", async () => {
+  it("whene it is OrderPage order link is active", async () => {
     const history = createMemoryHistory({
       initialEntries: ["/"],
     });
@@ -111,5 +122,57 @@ describe("Header component", () => {
     orderLink = await screen.findByRole("link", { name: /orders link/i });
     expect(orderLink).toHaveClass("active-link");
   });
-  it("input tracks text updates using the updateSearch function");
+  it("input tracks text updates using the updateSearch function", async () => {
+    render(
+      <MemoryRouter>
+        <Header cartProducts={cartProductsMock} />
+      </MemoryRouter>
+    );
+    const inputElement = screen.getByPlaceholderText(/search/i);
+    expect(inputElement).toHaveValue("");
+    await user.type(inputElement, "hi");
+    expect(inputElement).toHaveValue("hi");
+  });
+  it("search button navigates to url with search_query from input", async () => {
+    render(
+      <MemoryRouter>
+        <Header cartProducts={cartProductsMock} />
+      </MemoryRouter>
+    );
+    const inputElement = screen.getByPlaceholderText(/search/i);
+    expect(inputElement).toHaveValue("");
+
+    const searchButton = screen.getByTestId("search-button");
+    await user.click(searchButton);
+    expect(navigateMock).toHaveBeenLastCalledWith("/");
+
+    await user.type(inputElement, "   ");
+    await user.click(searchButton);
+    expect(navigateMock).toHaveBeenLastCalledWith("/");
+
+    await user.clear(inputElement);
+    await user.type(inputElement, "tshirt");
+    await user.click(searchButton);
+    expect(navigateMock).toHaveBeenLastCalledWith("/?search_query=tshirt");
+  });
+  it("press enter on input element navigates to url with search_query from it", async () => {
+    render(
+      <MemoryRouter>
+        <Header cartProducts={cartProductsMock} />
+      </MemoryRouter>
+    );
+    const inputElement = screen.getByPlaceholderText(/search/i);
+    expect(inputElement).toHaveValue("");
+    await user.type(inputElement, "hat{enter}");
+    expect(navigateMock).toHaveBeenLastCalledWith("/?search_query=hat");
+  });
+  it("URL search_query synchronizes with input whene load with search query", () => {
+    render(
+      <MemoryRouter initialEntries={["/?search_query=hat"]}>
+        <Header cartProducts={cartProductsMock} />
+      </MemoryRouter>
+    );
+    const inputElement = screen.getByPlaceholderText(/search/i);
+    expect(inputElement).toHaveValue("hat");
+  });
 });
